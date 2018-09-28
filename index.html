@@ -9,11 +9,19 @@
 </head>
 
 <body>
-    <div class="container">
-        <h1>Shopping List</h1>
+    <di class="container">
+        <h1>Shopping List</h1>  
+
         <form id="js-shopping-list-form">
             <label for="shopping-list-entry">Add an item</label>
             <input type="text" name="shopping-list-entry" class="js-shopping-list-entry" placeholder="e.g., broccoli">
+            <button type="submit">Add item</button>
+        </form>
+        <input class='js-hide-all-checked-items' type ='checkbox' name='hideChecked'>Hide Checked Items<br>
+        
+        <form id="js-search-term">
+            <label for="search-item-entry">Search for an item</label>
+            <input type="text" name="search" class="js-shopping-search-entry" placeholder="search for something!!">
             <button type="submit">Add item</button>
         </form>
         <ul class="shopping-list js-shopping-list">

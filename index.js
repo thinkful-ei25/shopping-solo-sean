@@ -1,11 +1,18 @@
 'use strict';
 /*eslint-env jquery*/
 
-const STORE = [
-  {name:'Orange',checked:true},
-  {name:'Apple', checked:false},
-  {name:'Kiwi',checked:true}
-];
+const STORE = {
+  items : [
+    {name:'Orange',checked:true},
+    {name:'Apple', checked:false},
+    {name:'Kiwi',checked:true}], 
+
+  hideCheckedItems : false, 
+  searchTerm : '' 
+
+};
+//let hideAll = false; 
+
 
 function generateItemElement(item, itemIndex) {
   return `
@@ -29,16 +36,25 @@ function generateShoppingItemsString(shoppingList) {
 }
 
 function renderShoppingList() {
+  let filteredItems = Array.from(STORE.items); 
+  if (STORE.hideCheckedItems){ 
+    filteredItems = filteredItems.filter(item => !item.checked); 
+  }
+
+  if (STORE.searchTerm !== ''){ 
+    filteredItems = filteredItems.filter((item) => item.name.includes(STORE.searchTerm)); 
+
+  }
   // this function will be responsible for rendering the shopping list in
   // the DOM
-  const shoppingListItemString = generateShoppingItemsString(STORE);
+  const shoppingListItemString = generateShoppingItemsString(filteredItems);
   $('.js-shopping-list').html(shoppingListItemString);
   // eslint-disable-next-line no-console
   console.log('`renderShoppingList` ran');
 }
   
 function addItemToShoppingList(itemName) { 
-  STORE.push({name : itemName, checked : false}); 
+  STORE.items.push({name : itemName, checked : false}); 
 } 
 
 function handleNewItemSubmit() {
@@ -64,7 +80,7 @@ function getItemIndexFromElement(item) {
 }
 
 function toggleCheckedForListItem(itemIndex) {
-  STORE[itemIndex].checked = !STORE[itemIndex].checked; 
+  STORE.items[itemIndex].checked = !STORE.items[itemIndex].checked; 
 }
 
 function handleItemCheckClicked() {
@@ -88,7 +104,7 @@ function renderDelete(item) {
 
 function deleteStoreItem(item){
   const index = getItemIndexFromElement(item);
-  STORE.splice(index,1);
+  STORE.items.splice(index,1);
 }
   
 function handleDeleteItemClicked() {
@@ -106,7 +122,35 @@ function handleDeleteItemClicked() {
   //eslint-disable-next-line no-console
   console.log('`handleDeleteItemClicked` ran');
 }
+
+function updateStoreHideCheckedItems(item){ 
+  STORE.hideCheckedItems = !STORE.hideCheckedItems;
+}
+
+function handleHideCheckedItems(){ 
+  console.log('yo'); 
+  $('.js-hide-all-checked-items').on('click', function(event){ 
+    updateStoreHideCheckedItems(event.target); 
+    renderShoppingList(); 
+    
+  });  
+}
   
+function updateStoreSearchTerm(searchTerm){ 
+  STORE.searchTerm = searchTerm; 
+}
+
+function handleSearchFilterItems(){ 
+  $('#js-search-term').submit(function(event) { 
+    event.preventDefault(); 
+    // console.log('hello'); 
+    const searchTerm = $('.js-shopping-search-entry').val(); 
+    $('.js-shopping-list-entry').val(''); 
+
+    updateStoreSearchTerm(searchTerm);
+    renderShoppingList();    
+  }); 
+}
 // this function will be our callback when the page loads. it's responsible for
 // initially rendering the shopping list, and activating our individual functions
 // that handle new item submission and user clicks on the "check" and "delete" buttons
@@ -116,6 +160,9 @@ function handleShoppingList() {
   handleNewItemSubmit();
   handleItemCheckClicked();
   handleDeleteItemClicked();
+  handleHideCheckedItems(); 
+  handleSearchFilterItems(); 
+  
 }
 
 $(handleShoppingList);
