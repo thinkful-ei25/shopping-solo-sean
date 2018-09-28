@@ -7,7 +7,7 @@ const STORE = [
   {name:'Kiwi',checked:true}
 ];
 
-function generateItemElement(item, itemIndex, template) {
+function generateItemElement(item, itemIndex) {
   return `
     <li class="js-item-index-element" data-item-index="${itemIndex}">
     <span class="shopping-item js-shopping-item ${item.checked ? 
@@ -70,12 +70,15 @@ function toggleCheckedForListItem(itemIndex) {
 function handleItemCheckClicked() {
   // this function will be responsible for when users click the "check" button on
   // a shopping list item.
+
   //eslint-disable-next-line no-console
   $('.js-shopping-list').on('click', '.js-item-toggle', function(event){
-    const itemIndex = getItemIndexFromElement(event.currentTarget);
+    const itemIndex = getItemIndexFromElement(event.target);
     toggleCheckedForListItem(itemIndex);
     renderShoppingList();
   });
+
+  //eslint-disable-next-line no-console
   console.log('`handleItemCheckClicked` ran');
 }
 
@@ -94,11 +97,13 @@ function handleDeleteItemClicked() {
   // eslint-disable-next-line no-console
   $('.js-shopping-list').on('click', '.js-item-delete', function(event){
     //$(event.currentTarget).closest('li').remove();
-    const listElement = $(event.currentTarget).closest('li');
-    renderDelete(listElement);
+    const listElement = $(event.target).closest('li');
     deleteStoreItem(listElement);
+    renderDelete(listElement);
+  
   });
 
+  //eslint-disable-next-line no-console
   console.log('`handleDeleteItemClicked` ran');
 }
   
