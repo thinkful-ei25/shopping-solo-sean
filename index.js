@@ -24,6 +24,9 @@ function generateItemElement(item, itemIndex) {
       <button class="shopping-item-delete js-item-delete">
           <span class="button-label">delete</span>
       </button>
+      <button class="shopping-item-edit js-item-edit">
+          <span class="button-label">edit</span>
+      </button>
     </div>
     </li>`;
 }
@@ -65,7 +68,6 @@ function handleNewItemSubmit() {
     renderShoppingList();    
   }); 
 
-  console.log('`handleNewItemSubmit` ran');
 }
 
 //Gets the index of list element
@@ -108,15 +110,37 @@ function handleDeleteItemClicked() {
   console.log('`handleDeleteItemClicked` ran');
 }
 
-
 function handleHideCheckedItems(){ 
-  console.log('yo'); 
+
   $('.js-hide-all-checked-items').on('click', function(event){ 
     setStoreHideAllCheckedItems(event.target); 
     renderShoppingList(); 
     
   });  
 }
+
+function handleEditItems(){ 
+
+  // this function will be responsible for when users want to delete a shopping list
+  // item
+  // eslint-disable-next-line no-console
+  $('.js-shopping-list').on('click', '.js-item-edit', function(event){
+    //$(event.currentTarget).closest('li').remove();
+    const closestLiElement = $(event.currentTarget).closest('li'); 
+    const index = getItemIndexFromElement(closestLiElement); 
+    
+    
+    let editEntry = $('.js-shopping-search-entry-edit').val(); 
+    $('.js-shopping-search-entry-edit').val('');
+
+    updateStoreItemName(index, editEntry); 
+    //renderDelete(listElement);
+    renderShoppingList(); 
+  }); 
+
+}
+
+
 
 function handleSearchFilterItems(){ 
   $('#js-search-term').submit(function(event) { 
@@ -130,12 +154,15 @@ function handleSearchFilterItems(){
   }); 
 }
 
+function updateStoreItemName(index, val){ 
+  STORE.items[index].name = val; 
+}
 function deleteStoreItem(item){
   const index = getItemIndexFromElement(item);
   STORE.items.splice(index,1);
 }
 
-function setStoreHideAllCheckedItems(item){ 
+function setStoreHideAllCheckedItems(){ 
   STORE.hideCheckedItems = !STORE.hideCheckedItems;
 }
 
@@ -163,6 +190,7 @@ function handleShoppingList() {
   handleDeleteItemClicked();
   handleHideCheckedItems(); 
   handleSearchFilterItems(); 
+  handleEditItems(); 
   
 }
 
