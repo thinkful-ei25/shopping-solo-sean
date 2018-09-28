@@ -11,8 +11,6 @@ const STORE = {
   searchTerm : '' 
 
 };
-//let hideAll = false; 
-
 
 function generateItemElement(item, itemIndex) {
   return `
@@ -35,52 +33,47 @@ function generateShoppingItemsString(shoppingList) {
   return items.join('');
 }
 
+//Responsible for rendering the DOM
 function renderShoppingList() {
   let filteredItems = Array.from(STORE.items); 
+
+  //FILTER VIA CHECKED ITEMS
   if (STORE.hideCheckedItems){ 
     filteredItems = filteredItems.filter(item => !item.checked); 
   }
 
+  //FILTER VIA SEARCH TERM
   if (STORE.searchTerm !== ''){ 
     filteredItems = filteredItems.filter((item) => item.name.includes(STORE.searchTerm)); 
-
   }
-  // this function will be responsible for rendering the shopping list in
-  // the DOM
+  
+  
   const shoppingListItemString = generateShoppingItemsString(filteredItems);
   $('.js-shopping-list').html(shoppingListItemString);
   // eslint-disable-next-line no-console
   console.log('`renderShoppingList` ran');
 }
   
-function addItemToShoppingList(itemName) { 
-  STORE.items.push({name : itemName, checked : false}); 
-} 
-
+//Used when a user adds a new list item
 function handleNewItemSubmit() {
+
   $('#js-shopping-list-form').submit(function(event){
     event.preventDefault(); 
     const newItemName = $('.js-shopping-list-entry').val(); 
     $('.js-shopping-list-entry').val(''); 
-    addItemToShoppingList(newItemName);
+    setStoreShoppingListItem(newItemName);
     renderShoppingList();    
   }); 
 
-  
-  // this function will be responsible for when users add a new shopping list item
-  // eslint-disable-next-line no-console
   console.log('`handleNewItemSubmit` ran');
 }
-  
+
+//Gets the index of list element
 function getItemIndexFromElement(item) {
   const itemIndexString = $(item)
     .closest('.js-item-index-element')
     .attr('data-item-index');
   return parseInt(itemIndexString, 10);
-}
-
-function toggleCheckedForListItem(itemIndex) {
-  STORE.items[itemIndex].checked = !STORE.items[itemIndex].checked; 
 }
 
 function handleItemCheckClicked() {
@@ -90,21 +83,12 @@ function handleItemCheckClicked() {
   //eslint-disable-next-line no-console
   $('.js-shopping-list').on('click', '.js-item-toggle', function(event){
     const itemIndex = getItemIndexFromElement(event.target);
-    toggleCheckedForListItem(itemIndex);
+    setStoreCheckedItemVal(itemIndex);
     renderShoppingList();
   });
 
   //eslint-disable-next-line no-console
   console.log('`handleItemCheckClicked` ran');
-}
-
-function renderDelete(item) {
-  $(item).remove();
-}
-
-function deleteStoreItem(item){
-  const index = getItemIndexFromElement(item);
-  STORE.items.splice(index,1);
 }
   
 function handleDeleteItemClicked() {
@@ -115,7 +99,8 @@ function handleDeleteItemClicked() {
     //$(event.currentTarget).closest('li').remove();
     const listElement = $(event.target).closest('li');
     deleteStoreItem(listElement);
-    renderDelete(listElement);
+    renderShoppingList(); 
+    //renderDelete(listElement);
   
   });
 
@@ -123,21 +108,14 @@ function handleDeleteItemClicked() {
   console.log('`handleDeleteItemClicked` ran');
 }
 
-function updateStoreHideCheckedItems(item){ 
-  STORE.hideCheckedItems = !STORE.hideCheckedItems;
-}
 
 function handleHideCheckedItems(){ 
   console.log('yo'); 
   $('.js-hide-all-checked-items').on('click', function(event){ 
-    updateStoreHideCheckedItems(event.target); 
+    setStoreHideAllCheckedItems(event.target); 
     renderShoppingList(); 
     
   });  
-}
-  
-function updateStoreSearchTerm(searchTerm){ 
-  STORE.searchTerm = searchTerm; 
 }
 
 function handleSearchFilterItems(){ 
@@ -147,10 +125,33 @@ function handleSearchFilterItems(){
     const searchTerm = $('.js-shopping-search-entry').val(); 
     $('.js-shopping-list-entry').val(''); 
 
-    updateStoreSearchTerm(searchTerm);
+    setStoreSearchTerm(searchTerm);
     renderShoppingList();    
   }); 
 }
+
+function deleteStoreItem(item){
+  const index = getItemIndexFromElement(item);
+  STORE.items.splice(index,1);
+}
+
+function setStoreHideAllCheckedItems(item){ 
+  STORE.hideCheckedItems = !STORE.hideCheckedItems;
+}
+
+function setStoreSearchTerm(searchTerm){ 
+  STORE.searchTerm = searchTerm; 
+}
+
+function setStoreCheckedItemVal(itemIndex) {
+  STORE.items[itemIndex].checked = !STORE.items[itemIndex].checked; 
+}
+
+function setStoreShoppingListItem(itemName) { 
+  STORE.items.push({name : itemName, checked : false}); 
+} 
+
+
 // this function will be our callback when the page loads. it's responsible for
 // initially rendering the shopping list, and activating our individual functions
 // that handle new item submission and user clicks on the "check" and "delete" buttons
