@@ -79,68 +79,43 @@ function getItemIndexFromElement(item) {
 }
 
 function handleItemCheckClicked() {
-  // this function will be responsible for when users click the "check" button on
-  // a shopping list item.
-
-  //eslint-disable-next-line no-console
   $('.js-shopping-list').on('click', '.js-item-toggle', function(event){
     const itemIndex = getItemIndexFromElement(event.target);
     setStoreCheckedItemVal(itemIndex);
     renderShoppingList();
   });
 
-  //eslint-disable-next-line no-console
-  console.log('`handleItemCheckClicked` ran');
 }
   
 function handleDeleteItemClicked() {
-  // this function will be responsible for when users want to delete a shopping list
-  // item
-  // eslint-disable-next-line no-console
   $('.js-shopping-list').on('click', '.js-item-delete', function(event){
-    //$(event.currentTarget).closest('li').remove();
     const listElement = $(event.target).closest('li');
     deleteStoreItem(listElement);
     renderShoppingList(); 
-    //renderDelete(listElement);
-  
   });
-
-  //eslint-disable-next-line no-console
-  console.log('`handleDeleteItemClicked` ran');
 }
 
 function handleHideCheckedItems(){ 
-
   $('.js-hide-all-checked-items').on('click', function(event){ 
     setStoreHideAllCheckedItems(event.target); 
     renderShoppingList(); 
-    
   });  
 }
 
 function handleEditItems(){ 
-
-  // this function will be responsible for when users want to delete a shopping list
-  // item
-  // eslint-disable-next-line no-console
   $('.js-shopping-list').on('click', '.js-item-edit', function(event){
     //$(event.currentTarget).closest('li').remove();
     const closestLiElement = $(event.currentTarget).closest('li'); 
     const index = getItemIndexFromElement(closestLiElement); 
     
-    
     let editEntry = $('.js-shopping-search-entry-edit').val(); 
     $('.js-shopping-search-entry-edit').val('');
 
     updateStoreItemName(index, editEntry); 
-    //renderDelete(listElement);
     renderShoppingList(); 
   }); 
 
 }
-
-
 
 function handleSearchFilterItems(){ 
   $('#js-search-term').submit(function(event) { 
