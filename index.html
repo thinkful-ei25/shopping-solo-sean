@@ -12,6 +12,7 @@
     <di class="container">
         <h1>Shopping List</h1>  
 
+        <!-- add item field -->
         <form id="js-shopping-list-form">
             <label for="shopping-list-entry">Add an item</label>
             <input type="text" name="shopping-list-entry" class="js-shopping-list-entry" placeholder="e.g., broccoli">
@@ -19,12 +20,15 @@
         </form>
         <input class='js-hide-all-checked-items' type ='checkbox' name='hideChecked'>Hide Checked Items<br>
         
+        <!-- search form -->
         <form id="js-search-term">
             <label for="search-item-entry">Search for an item</label>
             <input type="text" name="search" class="js-shopping-search-entry" placeholder="search for something!!">
             <button type="submit">Search</button>
         </form>
+        <!-- edit input field  -->
         <input type="text" name="edit" class="js-shopping-search-entry-edit" placeholder="edit!!">
+        
         <ul class="shopping-list js-shopping-list">
         </ul>
     </div>
@@ -32,3 +36,4 @@
     <script type="text/javascript" src="index.js"></script>
 </body>
 </html>
+
